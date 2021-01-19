@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -24,9 +24,12 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-const App: () => React$Node = () => {
+import {StripeProvider, CardField} from 'react-native-stripe-sdk';
+
+const App = () => {
+  const [, setCard] = useState(null);
   return (
-    <>
+    <StripeProvider publishableKey="pk_test_51Ho4m5A51v44wNexXNFEg0MSAjZUzllhhJwiFmAmJ4tzbvsvuEgcMCaPEkgK7RpXO1YI5okHP08IUfJ6YS7ulqzk00O2I0D1rT">
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
         <ScrollView
@@ -41,10 +44,16 @@ const App: () => React$Node = () => {
           <View style={styles.body}>
             <View style={styles.sectionContainer}>
               <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
+              <CardField
+                style={{
+                  width: '100%',
+                  height: 50,
+                  marginBottom: 20,
+                }}
+                onCardChange={(cardDetails) => {
+                  setCard(cardDetails);
+                }}
+              />
             </View>
             <View style={styles.sectionContainer}>
               <Text style={styles.sectionTitle}>See Your Changes</Text>
@@ -68,7 +77,7 @@ const App: () => React$Node = () => {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </>
+    </StripeProvider>
   );
 };
 
