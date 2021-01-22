@@ -14,6 +14,7 @@ import {
   View,
   Text,
   StatusBar,
+  Button,
 } from 'react-native';
 
 import {
@@ -24,10 +25,21 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import {StripeProvider, CardField} from 'react-native-stripe-sdk';
+import {StripeProvider, CardField, useStripe} from 'react-native-stripe-sdk';
 
 const App = () => {
-  const [, setCard] = useState(null);
+  const [card, setCard] = useState(null);
+  const {createPaymentMethod} = useStripe();
+
+  const handleSubmit = async () => {
+    try {
+      const paymentMethod = await createPaymentMethod(card);
+      console.log('pm: ', paymentMethod);
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+
   return (
     <StripeProvider publishableKey="pk_test_51Ho4m5A51v44wNexXNFEg0MSAjZUzllhhJwiFmAmJ4tzbvsvuEgcMCaPEkgK7RpXO1YI5okHP08IUfJ6YS7ulqzk00O2I0D1rT">
       <StatusBar barStyle="dark-content" />
@@ -54,6 +66,7 @@ const App = () => {
                   setCard(cardDetails);
                 }}
               />
+              <Button title="Submit" onPress={handleSubmit} />
             </View>
             <View style={styles.sectionContainer}>
               <Text style={styles.sectionTitle}>See Your Changes</Text>
