@@ -32,8 +32,21 @@ const App = () => {
   const {createPaymentMethod} = useStripe();
 
   const handleSubmit = async () => {
+    console.log('in handlesubmit');
     try {
-      const paymentMethod = await createPaymentMethod(card);
+      const paymentMethod = await createPaymentMethod({
+        type: 'Card',
+        cardDetails: card,
+        billingDetails: {
+          email: 'email@stripe.com',
+          phone: '+48888000888',
+          addressCity: 'Houston',
+          addressCountry: 'US',
+          addressLine1: '1459  Circle Drive',
+          addressLine2: 'Texas',
+          addressPostalCode: '77063',
+        },
+      });
       console.log('pm: ', paymentMethod);
     } catch (error) {
       console.log('error', error);
@@ -57,11 +70,7 @@ const App = () => {
             <View style={styles.sectionContainer}>
               <Text style={styles.sectionTitle}>Step One</Text>
               <CardField
-                style={{
-                  width: '100%',
-                  height: 50,
-                  marginBottom: 20,
-                }}
+                style={styles.cardField}
                 onCardChange={(cardDetails) => {
                   setCard(cardDetails);
                 }}
@@ -95,6 +104,11 @@ const App = () => {
 };
 
 const styles = StyleSheet.create({
+  cardField: {
+    width: '100%',
+    height: 50,
+    marginBottom: 20,
+  },
   scrollView: {
     backgroundColor: Colors.lighter,
   },
